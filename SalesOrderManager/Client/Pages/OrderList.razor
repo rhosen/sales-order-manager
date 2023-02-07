@@ -1,0 +1,48 @@
+﻿@page "/fetchorder"
+@using SalesOrderManager.Shared.Models;
+@inject HttpClient Http;
+@inject NavigationManager Navigator;
+
+<h3>Orders</h3>
+
+@if (Orders == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>State</th>
+                <th>Details</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Orders)
+            {
+                <tr>
+                    <td>@order.Name</td>
+                    <td>@order.State</td>
+                    <td>
+                        <button @onclick='()=> Navigator.NavigateTo("/editorder/" + order.Id)' class="btn btn-outline-primary">Details</button>
+                    </td>
+                    <td>
+                        <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-danger">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Order> Orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Orders = await Http.GetFromJsonAsync<List<Order>>("api/Order");
+    }
+}

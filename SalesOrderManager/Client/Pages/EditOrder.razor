@@ -1,0 +1,71 @@
+﻿@page "/editorder"
+@page "/editorder/{orderId}"
+@using SalesOrderManager.Shared.Models;
+@inject HttpClient Http;
+@inject NavigationManager Navigator;
+
+<h3>Order Details</h3>
+<hr />
+
+<div class="col-md-8">
+    <div class="input-group">
+        <span class="input-group-text">Name</span>
+        <input type="text" class="form-control" id="" placeholder="Name" value="@order.Name">
+        <span class="input-group-text">State</span>
+        <input type="text" class="form-control" id="" placeholder="State" value="@order.State">
+        <button class="btn btn-outline-primary" type="button">Update</button>
+    </div>
+</div>
+
+<div class="pt-3">
+    @if (order.Windows?.Count == 0)
+    {
+        <p>No windows found for this order</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity Of Windows</th>
+                    <th>Total Subelements</th>
+                    <th>Details</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var window in order.Windows.ToList())
+                {
+                    <tr>
+                        <td>@window.Name</td>
+                        <td>@window.QuantityOfWindows</td>
+                        <td>@window.TotalSubElements</td>
+                        <td>
+                            <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-primary">View Subelements</button>
+                        </td>
+                        <td>
+                            <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-danger">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public string orderId { get; set; }
+
+    private Order order = new Order()
+        {
+            Windows = new List<Window>()
+        };
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await Http.GetFromJsonAsync<Order>("api/Order/" + orderId);
+    }
+}
