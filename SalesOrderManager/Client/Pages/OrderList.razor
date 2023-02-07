@@ -2,6 +2,7 @@
 @using SalesOrderManager.Shared.Models;
 @inject HttpClient Http;
 @inject NavigationManager Navigator;
+@inject IJSRuntime JsRuntime;
 
 <h3>Orders</h3>
 
@@ -30,7 +31,7 @@ else
                         <button @onclick='()=> Navigator.NavigateTo("/editorder/" + order.Id)' class="btn btn-outline-primary">Details</button>
                     </td>
                     <td>
-                        <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-danger">Delete</button>
+                        <button @onclick='(()=> DeleteOrder(order.Id))' class="btn btn-outline-danger">Delete</button>
                     </td>
                 </tr>
             }
@@ -44,5 +45,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         Orders = await Http.GetFromJsonAsync<List<Order>>("api/Order");
+    }
+
+    private async Task DeleteOrder(int orderId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "All the windows and subelements associated with the order will be deleted. Are you sure?");
+        if (confirmed)
+        {
+            await Http.DeleteAsync("api/Order/" + orderId);
+            Navigator.NavigateTo("/fetchorder", true);
+        }
     }
 }

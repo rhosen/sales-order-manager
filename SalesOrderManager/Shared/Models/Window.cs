@@ -1,4 +1,6 @@
-﻿namespace SalesOrderManager.Shared.Models
+﻿using System.Reflection.Metadata;
+
+namespace SalesOrderManager.Shared.Models
 {
     public class Window : IEntity
     {
@@ -7,6 +9,7 @@
         public int QuantityOfWindows { get; set; }
         public int TotalSubElements { get; set; }
         public int OrderId { get; set; }
+        public Order Order { get; set; }
         public List<SubElement> SubElements { get; set; }
 
     }

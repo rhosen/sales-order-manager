@@ -6,5 +6,6 @@ namespace SalesOrderManager.Server.Services
     {
         Task<List<Order>> Get();
         Task<Order> Get(int orderId);
+        Task Delete(int id);
     }
 }

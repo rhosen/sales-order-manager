@@ -14,7 +14,12 @@ builder.Services.AddControllersWithViews().AddJsonOptions(x =>
 builder.Services.AddRazorPages();
 builder.Services.AddDbContextPool<SalesOrderContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ISubElementService, SubElementService>();
+builder.Services.AddScoped<IWindowService, WindowService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ISubElementRepository, SubElementRepository>();
+builder.Services.AddScoped<IWindowRepository, WindowRepository>();
+
 
 var app = builder.Build();
 

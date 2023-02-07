@@ -3,24 +3,25 @@
 @using SalesOrderManager.Shared.Models;
 @inject HttpClient Http;
 @inject NavigationManager Navigator;
+@inject IJSRuntime JsRuntime;
 
-<h3>Order Details</h3>
+<h5>Order Details</h5>
 <hr />
 
-<div class="col-md-8">
-    <div class="input-group">
-        <span class="input-group-text">Name</span>
-        <input type="text" class="form-control" id="" placeholder="Name" value="@order.Name">
-        <span class="input-group-text">State</span>
-        <input type="text" class="form-control" id="" placeholder="State" value="@order.State">
-        <button class="btn btn-outline-primary" type="button">Update</button>
-    </div>
+<div class="input-group mt-md-5">
+    <span class="input-group-text">Name</span>
+    <input type="text" class="form-control" id="" placeholder="Name" value="@order.Name">
+    <span class="input-group-text">State</span>
+    <input type="text" class="form-control" id="" placeholder="State" value="@order.State">
+    <button class="btn btn-outline-primary" type="button">Update</button>
 </div>
 
-<div class="pt-3">
+<p class="mt-md-5">Windows</p>
+<hr />
+<div>
     @if (order.Windows?.Count == 0)
     {
-        <p>No windows found for this order</p>
+        <p>Loading Windows..</p>
     }
     else
     {
@@ -30,7 +31,6 @@
                     <th>Name</th>
                     <th>Quantity Of Windows</th>
                     <th>Total Subelements</th>
-                    <th>Details</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -42,12 +42,55 @@
                         <td>@window.QuantityOfWindows</td>
                         <td>@window.TotalSubElements</td>
                         <td>
-                            <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-primary">View Subelements</button>
-                        </td>
-                        <td>
-                            <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-danger">Delete</button>
+                            <button @onclick="(()=> DeleteWindow(window.Id))" class="btn btn-outline-danger">Delete</button>
                         </td>
                     </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<p class="mt-md-5">Subelements</p>
+<hr />
+<div>
+    @if (order.Windows?.Count == 0)
+    {
+        <p>Loading SubElements..</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Window Name</th>
+                    <th>Element</th>
+                    <th>Type</th>
+                    <th>Width</th>
+                    <th>Height</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var window in order.Windows.ToList())
+                {
+                    @foreach (var subelement in window.SubElements)
+                    {
+                        <tr>
+                            <td>@window.Name</td>
+                            <td>@subelement.Element</td>
+                            <td>@subelement.Type</td>
+                            <td>@subelement.Width</td>
+                            <td>@subelement.Height</td>
+                            <td>
+                                <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-primary">Update</button>
+                            </td>
+                            <td>
+                                <button @onclick="(()=> DeleteSubElement(subelement.Id))" class="btn btn-outline-danger">Delete</button>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
@@ -67,5 +110,25 @@
     protected override async Task OnInitializedAsync()
     {
         order = await Http.GetFromJsonAsync<Order>("api/Order/" + orderId);
+    }
+
+    private async Task DeleteSubElement(int subelementId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            await Http.DeleteAsync($"api/SubElement/{subelementId}");
+            Navigator.NavigateTo($"/editorder/{orderId}", true);
+        }
+    }
+
+    private async Task DeleteWindow(int windowId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "All the subelements associated with the window will aslo be deleted. Are you sure?");
+        if (confirmed)
+        {
+            await Http.DeleteAsync($"api/Window/{windowId}");
+            Navigator.NavigateTo($"/editorder/{orderId}", true);
+        }
     }
 }

@@ -22,11 +22,18 @@ namespace SalesOrderManager.Server.Controllers
             return await _orderService.Get();
         }
 
-        [HttpGet("{orderId}")]
-        public async Task<Order> Get(int orderId)
+        [HttpGet("{id}")]
+        public async Task<Order> Get(int id)
         {
-            var order = await _orderService.Get(orderId);
+            var order = await _orderService.Get(id);
             return order;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _orderService.Delete(id);
+            return Ok();
         }
     }
 }
