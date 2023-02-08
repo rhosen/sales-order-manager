@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SalesOrderManager.Shared.Models;
 
 namespace SalesOrderManager.Server.Repositories
@@ -15,14 +13,13 @@ namespace SalesOrderManager.Server.Repositories
             _context = context;
         }
 
-        public async Task<TEntity> Add(TEntity entity)
+        public async Task Add(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
             await _context.SaveChangesAsync();
-            return entity;
         }
 
-        public async Task<TEntity> Delete(int id)
+        public async Task Delete(int id)
         {
             var entity = await _context.Set<TEntity>().FindAsync(id);
             if (entity != null)
@@ -30,7 +27,6 @@ namespace SalesOrderManager.Server.Repositories
                 _context.Set<TEntity>().Remove(entity);
                 await _context.SaveChangesAsync();
             }
-            return entity;
         }
 
         public async Task<TEntity> Get(int id)
@@ -45,12 +41,12 @@ namespace SalesOrderManager.Server.Repositories
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<TEntity> Update(TEntity entity)
+        public async Task Update(TEntity entity)
         {
-
+            var entry = _context.Entry(entity);
+            if (entry.State == EntityState.Detached) _context.Set<TEntity>().Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return entity;
         }
 
     }

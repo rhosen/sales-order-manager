@@ -1,4 +1,5 @@
 ﻿using SalesOrderManager.Server.Repositories;
+using SalesOrderManager.Shared.Models;
 
 namespace SalesOrderManager.Server.Services
 {
@@ -14,6 +15,11 @@ namespace SalesOrderManager.Server.Services
         public async Task Delete(int id)
         {
             await _subElementRepository.Delete(id);
+        }
+
+        public async Task Update(SubElement subelement)
+        {
+            await _subElementRepository.Update(subelement);
         }
     }
 }

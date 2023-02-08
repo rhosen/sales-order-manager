@@ -24,5 +24,10 @@ namespace SalesOrderManager.Server.Services
         {
             await _orderRepository.Delete(id);
         }
+
+        public async Task Update(Order order)
+        {
+            await _orderRepository.Update(order);
+        }
     }
 }

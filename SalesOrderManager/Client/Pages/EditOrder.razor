@@ -5,16 +5,19 @@
 @inject NavigationManager Navigator;
 @inject IJSRuntime JsRuntime;
 
-<h5>Order Details</h5>
+<p>Order Details</p>
 <hr />
 
-<div class="input-group mt-md-5">
-    <span class="input-group-text">Name</span>
-    <input type="text" class="form-control" id="" placeholder="Name" value="@order.Name">
-    <span class="input-group-text">State</span>
-    <input type="text" class="form-control" id="" placeholder="State" value="@order.State">
-    <button class="btn btn-outline-primary" type="button">Update</button>
-</div>
+<EditForm Model="@order">
+    <div class="input-group mt-md-5">
+        <span class="input-group-text">Name</span>
+        <InputText type="text" class="form-control" id="" placeholder="Name" @bind-Value="order.Name" />
+        <span class="input-group-text">State</span>
+        <InputText type="text" class="form-control" id="" placeholder="State" @bind-Value="order.State" />
+        <button class="btn btn-outline-primary" type="button" @onclick="()=> UpdateOrder()">Update</button>
+    </div>
+</EditForm>
+
 
 <p class="mt-md-5">Windows</p>
 <hr />
@@ -81,10 +84,14 @@
                             <td>@window.Name</td>
                             <td>@subelement.Element</td>
                             <td>@subelement.Type</td>
-                            <td>@subelement.Width</td>
-                            <td>@subelement.Height</td>
                             <td>
-                                <button @onclick='()=> Navigator.NavigateTo("/editorder/")' class="btn btn-outline-primary">Update</button>
+                                <input type="number" class="form-control" @bind="subelement.Width" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" @bind="subelement.Height" />
+                            </td>
+                            <td>
+                                <button @onclick="()=> UpdateSubelement(subelement)" class="btn btn-outline-primary">Update</button>
                             </td>
                             <td>
                                 <button @onclick="(()=> DeleteSubElement(subelement.Id))" class="btn btn-outline-danger">Delete</button>
@@ -109,7 +116,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        order = await Http.GetFromJsonAsync<Order>("api/Order/" + orderId);
+        order = await Http.GetFromJsonAsync<Order>($"api/Order/{orderId}");
     }
 
     private async Task DeleteSubElement(int subelementId)
@@ -128,6 +135,26 @@
         if (confirmed)
         {
             await Http.DeleteAsync($"api/Window/{windowId}");
+            Navigator.NavigateTo($"/editorder/{orderId}", true);
+        }
+    }
+
+    private async Task UpdateOrder()
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            await Http.PutAsJsonAsync($"api/order/{order.Id}", order);
+            Navigator.NavigateTo($"/editorder/{orderId}", true);
+        }
+    }
+
+    private async Task UpdateSubelement(SubElement subelement)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            await Http.PutAsJsonAsync($"api/SubElement/{subelement.Id}", subelement);
             Navigator.NavigateTo($"/editorder/{orderId}", true);
         }
     }

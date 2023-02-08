@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesOrderManager.Server.Services;
+using SalesOrderManager.Shared.Models;
 
 namespace SalesOrderManager.Server.Controllers
 {
@@ -19,6 +20,12 @@ namespace SalesOrderManager.Server.Controllers
         {
             await _subElementService.Delete(id);
             return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task Put(int id, [FromBody] SubElement subelement)
+        {
+            await _subElementService.Update(subelement);
         }
     }
 }

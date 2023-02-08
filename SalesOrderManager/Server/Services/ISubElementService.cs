@@ -1,7 +1,11 @@
-﻿namespace SalesOrderManager.Server.Services
+﻿using SalesOrderManager.Shared.Models;
+
+namespace SalesOrderManager.Server.Services
 {
     public interface ISubElementService
     {
         Task Delete(int id);
+        Task Update(SubElement subelement);
+
     }
 }

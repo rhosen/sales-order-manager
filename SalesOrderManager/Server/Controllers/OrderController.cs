@@ -35,5 +35,11 @@ namespace SalesOrderManager.Server.Controllers
             await _orderService.Delete(id);
             return Ok();
         }
+
+        [HttpPut("{id}")]
+        public async Task Put(int id, [FromBody] Order order)
+        {
+            await _orderService.Update(order);
+        }
     }
 }

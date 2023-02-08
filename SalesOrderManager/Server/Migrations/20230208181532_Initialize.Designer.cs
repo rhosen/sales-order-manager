@@ -11,7 +11,7 @@ using SalesOrderManager.Server.Repositories;
 namespace SalesOrderManager.Server.Migrations
 {
     [DbContext(typeof(SalesOrderContext))]
-    [Migration("20230207200943_Initialize")]
+    [Migration("20230208181532_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
