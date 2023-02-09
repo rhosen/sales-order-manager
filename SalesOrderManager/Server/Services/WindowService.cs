@@ -1,4 +1,5 @@
 ﻿using SalesOrderManager.Server.Repositories;
+using SalesOrderManager.Shared.Models;
 
 namespace SalesOrderManager.Server.Services
 {
@@ -13,17 +14,20 @@ namespace SalesOrderManager.Server.Services
             _windowRepository = windowRepository;
             _subElementRepository = subElementRepository;
         }
+
+        public async Task Add(Window window)
+        {
+            await _windowRepository.Add(window);
+        }
+
         public async Task Delete(int id)
         {
-            try
-            {
-                await _windowRepository.Delete(id);
-            }
-            catch (Exception)
-            {
+            await _windowRepository.Delete(id);
+        }
 
-                throw;
-            }
+        public async Task<List<Window>> Get()
+        {
+            return await _windowRepository.GetAll();
         }
     }
 }

@@ -12,6 +12,11 @@ namespace SalesOrderManager.Server.Services
             _subElementRepository = subElementRepository;
         }
 
+        public async Task Add(SubElement subelement)
+        {
+            await _subElementRepository.Add(subelement);
+        }
+
         public async Task Delete(int id)
         {
             await _subElementRepository.Delete(id);

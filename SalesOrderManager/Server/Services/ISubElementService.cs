@@ -6,6 +6,6 @@ namespace SalesOrderManager.Server.Services
     {
         Task Delete(int id);
         Task Update(SubElement subelement);
-
+        Task Add(SubElement subelement);
     }
 }

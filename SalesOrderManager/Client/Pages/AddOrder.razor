@@ -1,0 +1,31 @@
+﻿@page "/add-order"
+@using SalesOrderManager.Shared.Models;
+@inject NavigationManager Navigator;
+@inject HttpClient Http;
+
+<div class="col-md-6 border rounded p-3">
+    <p class="fw-bold">Add Order</p>
+    <hr />
+    <form method="post">
+        <div class="form-group mb-3">
+            <label for="Name">Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" @bind-value="order.Name" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="State">State</label>
+            <input type="text" class="form-control" id="State" name="State" @bind-value="order.State" />
+        </div>
+        <button type="button" @onclick="SaveOrder" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+@code {
+    private Order order = new Order();
+
+    private async Task SaveOrder()
+    {
+        var response = await Http.PostAsJsonAsync("api/order", order);
+        response.EnsureSuccessStatusCode();
+        Navigator.NavigateTo("/order-list");
+    }
+}

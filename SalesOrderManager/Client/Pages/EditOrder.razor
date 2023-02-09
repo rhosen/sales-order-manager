@@ -1,5 +1,5 @@
-﻿@page "/editorder"
-@page "/editorder/{orderId}"
+﻿@page "/edit-order"
+@page "/edit-order/{orderId}"
 @using SalesOrderManager.Shared.Models;
 @inject HttpClient Http;
 @inject NavigationManager Navigator;
@@ -24,7 +24,7 @@
 <div>
     @if (order.Windows?.Count == 0)
     {
-        <p>Loading Windows..</p>
+        <p>No windows found.</p>
     }
     else
     {
@@ -59,7 +59,7 @@
 <div>
     @if (order.Windows?.Count == 0)
     {
-        <p>Loading SubElements..</p>
+        <p>No subelements found.</p>
     }
     else
     {
@@ -124,8 +124,9 @@
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
-            await Http.DeleteAsync($"api/SubElement/{subelementId}");
-            Navigator.NavigateTo($"/editorder/{orderId}", true);
+            var response = await Http.DeleteAsync($"api/subelement/{subelementId}");
+            response.EnsureSuccessStatusCode();
+            Navigator.NavigateTo($"/edit-order/{orderId}", true);
         }
     }
 
@@ -134,8 +135,9 @@
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "All the subelements associated with the window will aslo be deleted. Are you sure?");
         if (confirmed)
         {
-            await Http.DeleteAsync($"api/Window/{windowId}");
-            Navigator.NavigateTo($"/editorder/{orderId}", true);
+            var response = await Http.DeleteAsync($"api/window/{windowId}");
+            response.EnsureSuccessStatusCode();
+            Navigator.NavigateTo($"/edit-order/{orderId}", true);
         }
     }
 
@@ -144,8 +146,9 @@
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
-            await Http.PutAsJsonAsync($"api/order/{order.Id}", order);
-            Navigator.NavigateTo($"/editorder/{orderId}", true);
+            var response = await Http.PutAsJsonAsync($"api/order/{order.Id}", order);
+            response.EnsureSuccessStatusCode();
+            Navigator.NavigateTo($"/edit-order/{orderId}", true);
         }
     }
 
@@ -154,8 +157,9 @@
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
-            await Http.PutAsJsonAsync($"api/SubElement/{subelement.Id}", subelement);
-            Navigator.NavigateTo($"/editorder/{orderId}", true);
+            var response = await Http.PutAsJsonAsync($"api/subelement/{subelement.Id}", subelement);
+            response.EnsureSuccessStatusCode();
+            Navigator.NavigateTo($"/edit-order/{orderId}", true);
         }
     }
 }

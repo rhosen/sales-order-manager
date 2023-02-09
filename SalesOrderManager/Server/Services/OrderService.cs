@@ -25,9 +25,9 @@ namespace SalesOrderManager.Server.Services
             await _orderRepository.Delete(id);
         }
 
-        public async Task Update(Order order)
+        public async Task Add(Order order)
         {
-            await _orderRepository.Update(order);
+            await _orderRepository.Add(order);
         }
     }
 }

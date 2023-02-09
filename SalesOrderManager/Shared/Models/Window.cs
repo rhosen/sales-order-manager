@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata;
-
-namespace SalesOrderManager.Shared.Models
+﻿namespace SalesOrderManager.Shared.Models
 {
     public class Window : IEntity
     {

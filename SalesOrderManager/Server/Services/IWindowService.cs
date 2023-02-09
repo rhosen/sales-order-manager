@@ -1,7 +1,11 @@
-﻿namespace SalesOrderManager.Server.Services
+﻿using SalesOrderManager.Shared.Models;
+
+namespace SalesOrderManager.Server.Services
 {
     public interface IWindowService
     {
         Task Delete(int id);
+        Task<List<Window>> Get();
+        Task Add(Window window);
     }
 }

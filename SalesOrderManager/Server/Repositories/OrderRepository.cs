@@ -7,7 +7,6 @@ namespace SalesOrderManager.Server.Repositories
     {
         public OrderRepository(SalesOrderContext context) : base(context)
         {
-
         }
 
         public async Task<Order> GetOrder(int orderId)
