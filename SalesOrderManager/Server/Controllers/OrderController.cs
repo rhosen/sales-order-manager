@@ -40,11 +40,11 @@ namespace SalesOrderManager.Server.Controllers
             await _orderService.Delete(id);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task Put([FromBody] Order order)
         {
             _logger.LogInformation($"Update Order with id: {order.Id}");
-            await _orderService.Add(order);
+            await _orderService.Update(order);
         }
 
         [HttpPost]

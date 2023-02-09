@@ -11,9 +11,9 @@ namespace SalesOrderManager.Server.Services
         {
             _orderRepository = orderRepository;
         }
-        public Task<List<Order>> Get()
+        public async Task<List<Order>> Get()
         {
-            return _orderRepository.GetAll();
+            return await _orderRepository.GetAll();
         }
 
         public async Task<Order> Get(int orderId)
@@ -28,6 +28,11 @@ namespace SalesOrderManager.Server.Services
         public async Task Add(Order order)
         {
             await _orderRepository.Add(order);
+        }
+
+        public async Task Update(Order order)
+        {
+            await _orderRepository.Update(order);
         }
     }
 }

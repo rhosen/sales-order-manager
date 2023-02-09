@@ -2,7 +2,7 @@
 @using SalesOrderManager.Shared.Models;
 @inject NavigationManager Navigator;
 @inject HttpClient Http;
-
+@inject IToastService ToastService;
 
 <div class="col-md-6 border rounded p-3">
     <p class="fw-bold">Add Window</p>
@@ -47,5 +47,7 @@
     {
         var response = await Http.PostAsJsonAsync("api/window", window);
         response.EnsureSuccessStatusCode();
+        ToastService.ShowSuccess("The window has been added successfully.");
+        window = new Window();
     }
 }

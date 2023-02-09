@@ -26,7 +26,7 @@ namespace SalesOrderManager.Server.Controllers
             await _subElementService.Delete(id);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task Put([FromBody] SubElement subelement)
         {
             _logger.LogInformation($"Update subelement with id: {subelement.Id}");

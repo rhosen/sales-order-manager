@@ -2,6 +2,7 @@
 @using SalesOrderManager.Shared.Models;
 @inject NavigationManager Navigator;
 @inject HttpClient Http;
+@inject IToastService ToastService;
 
 
 <div class="col-md-6 border rounded p-3">
@@ -51,5 +52,7 @@
     {
         var response = await Http.PostAsJsonAsync("api/subelement", subElement);
         response.EnsureSuccessStatusCode();
+        ToastService.ShowSuccess("The subelement has been added successfully.");
+        subElement = new SubElement();
     }
 }

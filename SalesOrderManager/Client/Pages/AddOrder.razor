@@ -2,6 +2,7 @@
 @using SalesOrderManager.Shared.Models;
 @inject NavigationManager Navigator;
 @inject HttpClient Http;
+@inject IToastService ToastService;
 
 <div class="col-md-6 border rounded p-3">
     <p class="fw-bold">Add Order</p>
@@ -26,6 +27,7 @@
     {
         var response = await Http.PostAsJsonAsync("api/order", order);
         response.EnsureSuccessStatusCode();
-        Navigator.NavigateTo("/order-list");
+        ToastService.ShowSuccess("The order has been added successfully.");
+        order = new Order();
     }
 }

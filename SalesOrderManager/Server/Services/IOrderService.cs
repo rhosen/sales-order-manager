@@ -8,5 +8,6 @@ namespace SalesOrderManager.Server.Services
         Task<Order> Get(int id);
         Task Delete(int id);
         Task Add(Order order);
+        Task Update(Order order);
     }
 }

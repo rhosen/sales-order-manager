@@ -3,6 +3,7 @@
 @inject HttpClient Http;
 @inject NavigationManager Navigator;
 @inject IJSRuntime JsRuntime;
+@inject IToastService ToastService;
 
 <p class="fw-bold">Orders</p>
 <hr />
@@ -55,6 +56,8 @@ else
         {
             var response = await Http.DeleteAsync($"api/Order/{orderId}");
             response.EnsureSuccessStatusCode();
+            ToastService.ShowSuccess("The order has been deleted successfully!");
+            await Task.Delay(2000);
             Navigator.NavigateTo("/order-list", true);
         }
     }
