@@ -6,13 +6,10 @@ namespace SalesOrderManager.Server.Services
     public class WindowService : IWindowService
     {
         private readonly IWindowRepository _windowRepository;
-        private readonly ISubElementRepository _subElementRepository;
 
-        public WindowService(IWindowRepository windowRepository,
-                             ISubElementRepository subElementRepository)
+        public WindowService(IWindowRepository windowRepository)
         {
             _windowRepository = windowRepository;
-            _subElementRepository = subElementRepository;
         }
 
         public async Task Add(Window window)
