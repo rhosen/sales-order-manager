@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesOrderManager.Shared.Models;
 
-namespace SalesOrderManager.Server.Repositories
+namespace SalesOrderManager.Server.Repositories.Core
 {
     public class SalesOrderContext : DbContext
     {
@@ -22,7 +22,7 @@ namespace SalesOrderManager.Server.Repositories
             modelBuilder.Entity<Window>()
               .HasMany(x => x.SubElements).WithOne(y => y.Window).OnDelete(DeleteBehavior.Cascade);
 
-            
+
             modelBuilder.Entity<Order>().HasData
             (
                 new Order { Id = 1, Name = "New York Building 1", State = "NY", },

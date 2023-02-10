@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesOrderManager.Shared.Models;
 
-namespace SalesOrderManager.Server.Repositories
+namespace SalesOrderManager.Server.Repositories.Core
 {
     public class GenericRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity

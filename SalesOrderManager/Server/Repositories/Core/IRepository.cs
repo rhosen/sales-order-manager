@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SalesOrderManager.Server.Repositories
+namespace SalesOrderManager.Server.Repositories.Core
 {
     public interface IRepository<T> where T : class
     {

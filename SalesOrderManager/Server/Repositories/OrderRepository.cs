@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SalesOrderManager.Server.Repositories.Core;
 using SalesOrderManager.Shared.Models;
 
 namespace SalesOrderManager.Server.Repositories

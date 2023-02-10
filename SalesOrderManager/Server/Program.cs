@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SalesOrderManager.Server.Repositories;
+using SalesOrderManager.Server.Repositories.Core;
 using SalesOrderManager.Server.Services;
 using System.Text.Json.Serialization;
 
@@ -47,4 +48,5 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
+app.MigrateDatabase();
 app.Run();
