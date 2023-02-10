@@ -46,7 +46,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Orders = await Http.GetFromJsonAsync<List<Order>>("api/Order");
+        await LoadData();
     }
 
     private async Task DeleteOrder(int orderId)
@@ -57,8 +57,12 @@ else
             var response = await Http.DeleteAsync($"api/Order/{orderId}");
             response.EnsureSuccessStatusCode();
             ToastService.ShowSuccess("The order has been deleted successfully!");
-            await Task.Delay(2000);
-            Navigator.NavigateTo("/order-list", true);
+            await LoadData();
         }
+    }
+
+    private async Task LoadData()
+    {
+        Orders = await Http.GetFromJsonAsync<List<Order>>("api/Order");
     }
 }

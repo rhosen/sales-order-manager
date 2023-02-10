@@ -13,10 +13,11 @@ namespace SalesOrderManager.Server.Repositories
             _context = context;
         }
 
-        public async Task Add(TEntity entity)
+        public async Task<TEntity> Add(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task Delete(int id)

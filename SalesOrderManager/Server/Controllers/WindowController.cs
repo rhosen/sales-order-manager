@@ -34,10 +34,10 @@ namespace SalesOrderManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task Add(Window window)
+        public async Task<Window> Add(Window window)
         {
             _logger.LogInformation($"Add new window");
-            await _windowService.Add(window);
+            return await _windowService.Add(window);
         }
     }
 }

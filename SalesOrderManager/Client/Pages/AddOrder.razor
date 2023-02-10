@@ -27,7 +27,8 @@
     {
         var response = await Http.PostAsJsonAsync("api/order", order);
         response.EnsureSuccessStatusCode();
+        order = await response.Content.ReadFromJsonAsync<Order>();
         ToastService.ShowSuccess("The order has been added successfully.");
-        order = new Order();
+        Navigator.NavigateTo($"/edit-order/{order.Id}", true);
     }
 }

@@ -12,9 +12,9 @@ namespace SalesOrderManager.Server.Services
             _windowRepository = windowRepository;
         }
 
-        public async Task Add(Window window)
+        public async Task<Window> Add(Window window)
         {
-            await _windowRepository.Add(window);
+            return await _windowRepository.Add(window);
         }
 
         public async Task Delete(int id)

@@ -6,6 +6,6 @@ namespace SalesOrderManager.Server.Services
     {
         Task Delete(int id);
         Task<List<Window>> Get();
-        Task Add(Window window);
+        Task<Window> Add(Window window);
     }
 }

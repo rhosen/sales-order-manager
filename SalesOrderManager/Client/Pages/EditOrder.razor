@@ -6,131 +6,246 @@
 @inject IJSRuntime JsRuntime;
 @inject IToastService ToastService;
 
-<p>Order Details</p>
-<hr />
-
-<EditForm Model="@order">
-    <div class="input-group mt-md-5">
-        <span class="input-group-text">Name</span>
-        <InputText type="text" class="form-control" id="" placeholder="Name" @bind-Value="order.Name" />
-        <span class="input-group-text">State</span>
-        <InputText type="text" class="form-control" id="" placeholder="State" @bind-Value="order.State" />
-        <button class="btn btn-outline-primary" type="button" @onclick="()=> UpdateOrder()">Update</button>
+<section>
+    <p class="fw-bold">Edit Order</p>
+    <hr />
+    <div class="col-md-6 border rounded p-3">
+        <div class="form-group pb-3">
+            <label for="orderName">Name</label>
+            <input type="text" class="form-control" id="orderName" @bind="order.Name" />
+        </div>
+        <div class="form-group pb-3">
+            <label for="orderName">State</label>
+            <input type="text" class="form-control" id="orderState" @bind="order.State" />
+        </div>
+        <button class="btn btn-primary" type="button" @onclick="()=> UpdateOrder()">Update</button>
     </div>
-</EditForm>
+</section>
 
+<section>
+    <div class="col-md-6 border rounded p-3 mt-3">
+        <a href="#" class="btn btn-outline-primary" @onclick="ToggleWindowCollapse" @onclick:preventDefault>Add Window</a>
+        @if (!IsWindowCollapsed)
+        {
+            <div class="form-group pb-3 pt-3">
+                <label for="windowName">Window Name</label>
+                <input type="text" class="form-control" id="windowName" @bind="window.Name" />
+            </div>
+            <div class="form-group pb-3">
+                <label for="quantityOfWindows">Quantity of Windows</label>
+                <input type="number" class="form-control" id="quantityOfWindows" @bind="window.QuantityOfWindows" />
+            </div>
+            <div class="form-group pb-3">
+                <label for="totalSubElements">Total Subelements</label>
+                <input type="number" class="form-control" id="totalSubElements" @bind="window.TotalSubElements" />
+            </div>
+            <button type="button" class="btn btn-primary" @onclick="SaveWindow">Save</button>
+        }
+    </div>
+</section>
 
-<p class="mt-md-5">Windows</p>
-<hr />
-<div>
-    @if (order.Windows?.Count == 0)
-    {
-        <p>No windows found.</p>
-    }
-    else
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity Of Windows</th>
-                    <th>Total Subelements</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var window in order.Windows.ToList())
-                {
+<section>
+    <p class="mt-md-5 fw-bold">Windows</p>
+    <hr />
+    <div>
+        @if (order.Windows?.Count == 0)
+        {
+            <p>No windows found.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@window.Name</td>
-                        <td>@window.QuantityOfWindows</td>
-                        <td>@window.TotalSubElements</td>
-                        <td>
-                            <button @onclick="(()=> DeleteWindow(window.Id))" class="btn btn-outline-danger">Delete</button>
-                        </td>
+                        <th>Name</th>
+                        <th>Quantity Of Windows</th>
+                        <th>Total Subelements</th>
+                        <th>Delete</th>
+                        <th>Add Subelement</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    }
-</div>
-
-<p class="mt-md-5">Subelements</p>
-<hr />
-<div>
-    @if (order.Windows?.Count == 0)
-    {
-        <p>No subelements found.</p>
-    }
-    else
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Window Name</th>
-                    <th>Element</th>
-                    <th>Type</th>
-                    <th>Width</th>
-                    <th>Height</th>
-                    <th>Update</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var window in order.Windows.ToList())
-                {
-                    @foreach (var subelement in window.SubElements)
+                </thead>
+                <tbody>
+                    @foreach (var window in order.Windows.ToList())
                     {
                         <tr>
                             <td>@window.Name</td>
-                            <td>@subelement.Element</td>
-                            <td>@subelement.Type</td>
+                            <td>@window.QuantityOfWindows</td>
+                            <td>@window.TotalSubElements</td>
                             <td>
-                                <input type="number" class="form-control" @bind="subelement.Width" />
+                                <button @onclick="(()=> DeleteWindow(window.Id))" class="btn btn-outline-danger">Delete</button>
                             </td>
                             <td>
-                                <input type="number" class="form-control" @bind="subelement.Height" />
-                            </td>
-                            <td>
-                                <button @onclick="()=> UpdateSubelement(subelement)" class="btn btn-outline-primary">Update</button>
-                            </td>
-                            <td>
-                                <button @onclick="(()=> DeleteSubElement(subelement.Id))" class="btn btn-outline-danger">Delete</button>
+                                <button @onclick="(()=> SetWindow(window.Id))" class="btn btn-outline-danger">Add</button>
                             </td>
                         </tr>
                     }
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        }
+    </div>
+</section>
+
+<section>
+
+    @if (!IsSubelementCollapsed)
+    {
+        <a href="#" class="btn btn-outline-primary" @onclick="ToggleSubelementCollapse" @onclick:preventDefault>Hide View</a>
+
+        if (order.Windows.Count > 0)
+        {
+            <div class="col-md-6 border rounded p-3 mt-3">
+                <p class="fw-bold">Add Subelement</p>
+                <hr />
+                <div class="form-group mb-3">
+                    <label for="windowId">Window</label>
+                    <select class="form-control" id="windowId" @bind="subElement.WindowId">
+                        <option value="">Select a Window</option>
+                        @foreach (var window in order.Windows)
+                        {
+                            <option value="@window.Id">@window.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="element">Element</label>
+                    <input type="number" class="form-control" id="element" @bind="subElement.Element" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="type">Type</label>
+                    <input type="text" class="form-control" id="type" @bind="subElement.Type" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="width">Width</label>
+                    <input type="number" class="form-control" id="width" @bind="subElement.Width" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="height">Height</label>
+                    <input type="number" class="form-control" id="height" @bind="subElement.Height" />
+                </div>
+                <button type="button" class="btn btn-primary" @onclick="SaveSubelement">Save</button>
+            </div>
+        }
     }
-</div>
+</section>
+
+<section>
+    <p class="mt-md-5 fw-bold">Subelements</p>
+    <hr />
+    <div>
+        @if (order.Windows?.Count == 0)
+        {
+            <p>No subelements found.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Window Name</th>
+                        <th>Element</th>
+                        <th>Type</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var window in order.Windows.ToList())
+                    {
+                        @foreach (var subelement in window.SubElements)
+                        {
+                            <tr>
+                                <td>@window.Name</td>
+                                <td>@subelement.Element</td>
+                                <td>@subelement.Type</td>
+                                <td>
+                                    <input type="number" class="form-control" @bind="subelement.Width" />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" @bind="subelement.Height" />
+                                </td>
+                                <td>
+                                    <button @onclick="()=> UpdateSubelement(subelement)" class="btn btn-outline-primary">Update</button>
+                                </td>
+                                <td>
+                                    <button @onclick="(()=> DeleteSubElement(subelement.Id))" class="btn btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</section>
 
 @code {
 
     [Parameter]
     public string orderId { get; set; }
+    private Order order = new Order() { Windows = new List<Window>() };
+    private Window window = new Window();
+    private SubElement subElement = new SubElement();
+    private bool IsWindowCollapsed { get; set; } = true;
+    private bool IsSubelementCollapsed { get; set; } = true;
 
-    private Order order = new Order()
-        {
-            Windows = new List<Window>()
-        };
+    private void ToggleWindowCollapse()
+    {
+        IsWindowCollapsed = !IsWindowCollapsed;
+    }
+
+    private void ToggleSubelementCollapse()
+    {
+        IsSubelementCollapsed = !IsSubelementCollapsed;
+    }
 
     protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
     {
         order = await Http.GetFromJsonAsync<Order>($"api/Order/{orderId}");
     }
 
-    private async Task DeleteSubElement(int subelementId)
+    private void SetWindow(int windowId)
+    {
+        subElement.WindowId = windowId;
+        if (IsSubelementCollapsed) IsSubelementCollapsed = false;
+    }
+
+
+    private async Task UpdateOrder()
     {
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
-            var response = await Http.DeleteAsync($"api/subelement/{subelementId}");
+            var response = await Http.PutAsJsonAsync($"api/order", order);
             response.EnsureSuccessStatusCode();
-            ToastService.ShowSuccess("The subelement has been deleted successfully.");
-            await Task.Delay(2000);
-            Navigator.NavigateTo($"/edit-order/{orderId}", true);
+            ToastService.ShowSuccess("The order has been updated successfully.");
+            await LoadData();
         }
+    }
+
+    private async Task SaveWindow()
+    {
+        window.OrderId = Convert.ToInt32(orderId);
+        var response = await Http.PostAsJsonAsync("api/window", window);
+        response.EnsureSuccessStatusCode();
+        ToastService.ShowSuccess("The window has been added successfully.");
+        window = new Window();
+        await LoadData();
+    }
+
+    private async Task SaveSubelement()
+    {
+        var response = await Http.PostAsJsonAsync("api/subelement", subElement);
+        response.EnsureSuccessStatusCode();
+        ToastService.ShowSuccess("The subelement has been added successfully.");
+        subElement = new SubElement();
+        await LoadData();
     }
 
     private async Task DeleteWindow(int windowId)
@@ -141,21 +256,19 @@
             var response = await Http.DeleteAsync($"api/window/{windowId}");
             response.EnsureSuccessStatusCode();
             ToastService.ShowSuccess("The window has been deleted successfully.");
-            await Task.Delay(2000);
-            Navigator.NavigateTo($"/edit-order/{orderId}", true);
+            await LoadData();
         }
     }
 
-    private async Task UpdateOrder()
+    private async Task DeleteSubElement(int subelementId)
     {
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
-            var response = await Http.PutAsJsonAsync($"api/order", order);
+            var response = await Http.DeleteAsync($"api/subelement/{subelementId}");
             response.EnsureSuccessStatusCode();
-            ToastService.ShowSuccess("The order has been updated successfully.");
-            await Task.Delay(2000);
-            Navigator.NavigateTo($"/edit-order/{orderId}", true);
+            ToastService.ShowSuccess("The subelement has been deleted successfully.");
+            await LoadData();
         }
     }
 
@@ -167,8 +280,7 @@
             var response = await Http.PutAsJsonAsync($"api/subelement", subelement);
             response.EnsureSuccessStatusCode();
             ToastService.ShowSuccess("The subelement has been updated successfully.");
-            await Task.Delay(2000);
-            Navigator.NavigateTo($"/edit-order/{orderId}", true);
+            await LoadData();
         }
     }
 }

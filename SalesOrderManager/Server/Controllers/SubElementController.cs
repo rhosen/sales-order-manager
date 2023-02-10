@@ -34,10 +34,10 @@ namespace SalesOrderManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task Add(SubElement subelement)
+        public async Task<SubElement> Add(SubElement subelement)
         {
             _logger.LogInformation($"Add new subelement");
-            await _subElementService.Add(subelement);
+            return await _subElementService.Add(subelement);
         }
     }
 }

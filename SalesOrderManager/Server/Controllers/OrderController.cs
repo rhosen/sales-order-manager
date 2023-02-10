@@ -48,10 +48,10 @@ namespace SalesOrderManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task Add(Order order)
+        public async Task<Order> Add(Order order)
         {
             _logger.LogInformation("Add new order");
-            await _orderService.Add(order);
+            return await _orderService.Add(order);
         }
     }
 }
