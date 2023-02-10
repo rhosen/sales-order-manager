@@ -48,7 +48,7 @@
     <p class="mt-md-5 fw-bold">Windows</p>
     <hr />
     <div>
-        @if (order.Windows?.Count == 0)
+        @if (order.Windows?.Count <= 0)
         {
             <p>No windows found.</p>
         }
@@ -132,7 +132,7 @@
     <p class="mt-md-5 fw-bold">Subelements</p>
     <hr />
     <div>
-        @if (order.Windows?.Count == 0)
+        @if (order.Windows?.Count <= 0)
         {
             <p>No subelements found.</p>
         }
@@ -216,12 +216,12 @@
         if (IsSubelementCollapsed) IsSubelementCollapsed = false;
     }
 
-
     private async Task UpdateOrder()
     {
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
+            if (!IsValidOrder()) return;
             var response = await Http.PutAsJsonAsync($"api/order", order);
             response.EnsureSuccessStatusCode();
             ToastService.ShowSuccess("The order has been updated successfully.");
@@ -229,8 +229,25 @@
         }
     }
 
+    private bool IsValidOrder()
+    {
+        if (string.IsNullOrEmpty(order.Name))
+        {
+            ToastService.ShowWarning("Order name can't be empty.");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(order.State))
+        {
+            ToastService.ShowWarning("Order state can't be empty.");
+            return false;
+        }
+        return true;
+    }
+
     private async Task SaveWindow()
     {
+        if (!IsValidWindow()) return;
         window.OrderId = Convert.ToInt32(orderId);
         var response = await Http.PostAsJsonAsync("api/window", window);
         response.EnsureSuccessStatusCode();
@@ -239,13 +256,74 @@
         await LoadData();
     }
 
+    private bool IsValidWindow()
+    {
+        if (string.IsNullOrEmpty(window.Name))
+        {
+            ToastService.ShowWarning("Window name can't be empty.");
+            return false;
+        }
+
+        if (window.QuantityOfWindows <= 0)
+        {
+            ToastService.ShowWarning("Quantity of windows must be greater than zero.");
+            return false;
+        }
+
+        if (window.TotalSubElements <= 0)
+        {
+            ToastService.ShowWarning("Total subelements must be greater than zero.");
+            return false;
+        }
+
+        return true;
+    }
+
     private async Task SaveSubelement()
     {
+        if (!IsValidSubelement()) return;
         var response = await Http.PostAsJsonAsync("api/subelement", subElement);
         response.EnsureSuccessStatusCode();
         ToastService.ShowSuccess("The subelement has been added successfully.");
         subElement = new SubElement();
         await LoadData();
+    }
+
+    private bool IsValidSubelement()
+    {
+        if (subElement.Element <= 0)
+        {
+            ToastService.ShowWarning("Element must be greater than zero.");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(subElement.Type))
+        {
+            ToastService.ShowWarning("Type can't be empty.");
+            return false;
+        }
+
+        if (subElement.Width <= 0)
+        {
+            ToastService.ShowWarning("Width must be greater than zero.");
+            return false;
+        }
+
+        if (subElement.Height <= 0)
+        {
+            ToastService.ShowWarning("Height must be greater than zero.");
+            return false;
+        }
+
+        var window = order.Windows.FirstOrDefault(x => x.Id == subElement.WindowId);
+
+        if (window.SubElements.Count == window.TotalSubElements)
+        {
+            ToastService.ShowWarning($"You are not allowed to add more than {window.TotalSubElements} subelement(s) for this window.");
+            return false;
+        }
+
+        return true;
     }
 
     private async Task DeleteWindow(int windowId)

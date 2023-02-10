@@ -25,10 +25,27 @@
 
     private async Task SaveOrder()
     {
+        if (!IsValidOrder()) return;
         var response = await Http.PostAsJsonAsync("api/order", order);
         response.EnsureSuccessStatusCode();
         order = await response.Content.ReadFromJsonAsync<Order>();
         ToastService.ShowSuccess("The order has been added successfully.");
         Navigator.NavigateTo($"/edit-order/{order.Id}", true);
+    }
+
+    private bool IsValidOrder()
+    {
+        if (string.IsNullOrEmpty(order.Name))
+        {
+            ToastService.ShowWarning("Order name can't be empty.");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(order.State))
+        {
+            ToastService.ShowWarning("Order state can't be empty.");
+            return false;
+        }
+        return true;
     }
 }
