@@ -290,6 +290,12 @@
 
     private bool IsValidSubelement()
     {
+        if (subElement.WindowId == 0)
+        {
+            ToastService.ShowWarning("Please select a window.");
+            return false;
+        }
+
         if (subElement.Element <= 0)
         {
             ToastService.ShowWarning("Element must be greater than zero.");
